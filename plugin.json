@@ -12,5 +12,12 @@
   "sourceUrl": "",
   "donateUrl": "",
   "changelogUrl": "",
-  "modules": []
+  "modules": [
+    {
+      "slug": "damnModule",
+      "name": "damnModule",
+      "description": "",
+      "tags": []
+    }
+  ]
 }
