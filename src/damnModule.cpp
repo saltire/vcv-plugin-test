@@ -26,7 +26,33 @@ struct DamnModule : Module {
 		configOutput(OUTTIE_OUTPUT, "");
 	}
 
+	float phase = 0.f;
+	float blinkPhase = 0.f;
+
 	void process(const ProcessArgs& args) override {
+		// Compute the frequency from the pitch parameter and input
+		float pitch = params[KNOBBIE_PARAM].getValue();
+		pitch += inputs[INNIE_INPUT].getVoltage();
+		pitch = clamp(pitch, -4.f, 4.f);
+		// The default pitch is C4 = 261.6256f
+		float freq = dsp::FREQ_C4 * std::pow(2.f, pitch);
+
+		// Accumulate the phase
+		phase += freq * args.sampleTime;
+		if (phase >= 0.5f)
+			phase -= 1.f;
+
+		// Compute the sine output
+		float sine = std::sin(2.f * M_PI * phase);
+		// Audio signals are typically +/-5V
+		// https://vcvrack.com/manual/VoltageStandards
+		outputs[OUTTIE_OUTPUT].setVoltage(5.f * sine);
+
+		// Blink light at 1Hz
+		blinkPhase += args.sampleTime;
+		if (blinkPhase >= 1.f)
+			blinkPhase -= 1.f;
+		lights[BLINKIE_LIGHT].setBrightness(blinkPhase < 0.5f ? 1.f : 0.f);
 	}
 };
 
