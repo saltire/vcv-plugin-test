@@ -18,6 +18,12 @@
       "name": "damnModule",
       "description": "",
       "tags": []
+    },
+    {
+      "slug": "quantize",
+      "name": "quantize",
+      "description": "",
+      "tags": []
     }
   ]
 }
