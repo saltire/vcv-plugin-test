@@ -8,6 +8,7 @@ void init(Plugin* p) {
 	pluginInstance = p;
 
 	// Add modules here
+	p->addModel(modelArpsichord);
 	p->addModel(modelDamnModule);
 	p->addModel(modelQuantize);
 

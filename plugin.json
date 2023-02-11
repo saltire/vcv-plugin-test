@@ -24,6 +24,12 @@
       "name": "quantize",
       "description": "",
       "tags": []
+    },
+    {
+      "slug": "arpsichord",
+      "name": "arpsichord",
+      "description": "",
+      "tags": []
     }
   ]
 }
