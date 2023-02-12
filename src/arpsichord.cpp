@@ -3,7 +3,7 @@
 #include "utils/scale.hpp"
 
 
-float lastVoltage = 0;
+int currentStep = 0;
 
 struct Arpsichord : Module {
 	enum ParamId {
@@ -39,14 +39,23 @@ struct Arpsichord : Module {
 	dsp::SchmittTrigger clkTrigger;
 
 	void process(const ProcessArgs& args) override {
+		int steps = getParam(STEPS_PARAM).getValue();
+		int offset = getParam(OFFSET_PARAM).getValue();
+		int scale = getParam(SCALE_PARAM).getValue();
+
 		if (clkTrigger.process(getInput(CLK_INPUT).getVoltage(), .1f, 2.f)) {
-			// Tick
+			currentStep += 1;
 		}
+		currentStep %= steps;
+
+		int shiftSteps = currentStep + offset;
 
 		int channels = getInput(NOTE_INPUT).getChannels();
 		getOutput(NOTE_OUTPUT).setChannels(channels);
 		for (int c = 0; c < channels; c++) {
-			getOutput(NOTE_OUTPUT).setVoltage(getInput(NOTE_INPUT).getVoltage(), c);
+			float inputNote = getInput(NOTE_INPUT).getVoltage(c);
+			float outputNote = shiftNote(inputNote, scale, shiftSteps);
+			getOutput(NOTE_OUTPUT).setVoltage(outputNote, c);
 		}
 	}
 };

@@ -21,7 +21,8 @@ int SCALE_PENTATONIC     [6] = {0, 2, 4, 7, 9, 12};
 int SCALE_PHRYGIAN       [8] = {0, 1, 3, 5, 7, 8, 10, 12};
 int SCALE_TURKISH        [8] = {0, 1, 3, 5, 7, 10, 11, 12};
 
-// long printIter = 0;
+long printIter = 0;
+
 float closestVoltageInScale(float voltsIn, int rootNote, int currScale) {
 	int *curScaleArr;
 	int notesInScale = 0;
@@ -76,6 +77,46 @@ float closestVoltageInScale(float voltsIn, int rootNote, int currScale) {
 	// 	printIter = 0;
 	// }
 	return voltsOut;
+}
+
+float shiftNote(float voltsIn, int currScale, int steps) {
+	int octave = (int)floorf(voltsIn);
+	int note = (int)roundf((voltsIn - octave) * 12);
+
+	// if (printIter % 100000 == 0) {
+	// 	DEBUG("voltsIn:%f, scale:%i, steps:%i, octave:%i, note:%i",
+	// 		voltsIn, currScale, steps, octave, note);
+	// 	printIter = 0;
+	// }
+	// printIter += 1;
+
+	int *curScaleArr;
+	int notesInScale = 0;
+	switch(currScale){
+		case AEOLIAN:        curScaleArr = SCALE_AEOLIAN;       notesInScale=LENGTHOF(SCALE_AEOLIAN); break;
+		case BLUES:          curScaleArr = SCALE_BLUES;         notesInScale=LENGTHOF(SCALE_BLUES); break;
+		case CHROMATIC:      curScaleArr = SCALE_CHROMATIC;     notesInScale=LENGTHOF(SCALE_CHROMATIC); break;
+		case DIATONIC_MINOR: curScaleArr = SCALE_DIATONIC_MINOR;notesInScale=LENGTHOF(SCALE_DIATONIC_MINOR); break;
+		case DORIAN:         curScaleArr = SCALE_DORIAN;        notesInScale=LENGTHOF(SCALE_DORIAN); break;
+		case HARMONIC_MINOR: curScaleArr = SCALE_HARMONIC_MINOR;notesInScale=LENGTHOF(SCALE_HARMONIC_MINOR); break;
+		case INDIAN:         curScaleArr = SCALE_INDIAN;        notesInScale=LENGTHOF(SCALE_INDIAN); break;
+		case LOCRIAN:        curScaleArr = SCALE_LOCRIAN;       notesInScale=LENGTHOF(SCALE_LOCRIAN); break;
+		case LYDIAN:         curScaleArr = SCALE_LYDIAN;        notesInScale=LENGTHOF(SCALE_LYDIAN); break;
+		case MAJOR:          curScaleArr = SCALE_MAJOR;         notesInScale=LENGTHOF(SCALE_MAJOR); break;
+		case MELODIC_MINOR:  curScaleArr = SCALE_MELODIC_MINOR; notesInScale=LENGTHOF(SCALE_MELODIC_MINOR); break;
+		case MINOR:          curScaleArr = SCALE_MINOR;         notesInScale=LENGTHOF(SCALE_MINOR); break;
+		case MIXOLYDIAN:     curScaleArr = SCALE_MIXOLYDIAN;    notesInScale=LENGTHOF(SCALE_MIXOLYDIAN); break;
+		case NATURAL_MINOR:  curScaleArr = SCALE_NATURAL_MINOR; notesInScale=LENGTHOF(SCALE_NATURAL_MINOR); break;
+		case PENTATONIC:     curScaleArr = SCALE_PENTATONIC;    notesInScale=LENGTHOF(SCALE_PENTATONIC); break;
+		case PHRYGIAN:       curScaleArr = SCALE_PHRYGIAN;      notesInScale=LENGTHOF(SCALE_PHRYGIAN); break;
+		case TURKISH:        curScaleArr = SCALE_TURKISH;       notesInScale=LENGTHOF(SCALE_TURKISH); break;
+		case NONE:           return voltsIn;
+	}
+
+	int shiftOctaves = eucDiv(steps, notesInScale - 1);
+	int shiftNotes = eucMod(steps, notesInScale - 1);
+
+	return octave + shiftOctaves + (note + curScaleArr[shiftNotes]) / 12.f;
 }
 
 std::string scaleName(int scale) {

@@ -28,6 +28,8 @@ enum ScaleEnum {
 
 float closestVoltageInScale(float voltsIn, int rootNote, int currScale);
 
+float shiftNote(float voltsIn, int currScale, int steps);
+
 std::string scaleName(int scale);
 
 int scaleValue(std::string name);
