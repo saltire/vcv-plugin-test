@@ -1,6 +1,6 @@
 #include "plugin.hpp"
 #include "utils/note.hpp"
-#include "utils/scale.hpp"
+#include "utils/chord.hpp"
 
 
 int currentStep = 0;
@@ -29,7 +29,7 @@ struct Arpsichord : Module {
 		config(PARAMS_LEN, INPUTS_LEN, OUTPUTS_LEN, LIGHTS_LEN);
 		configParam(STEPS_PARAM, 1.f, 16.f, 8.f, "Steps");
 		configParam(OFFSET_PARAM, -16.f, 16.f, 0.f, "Step offset");
-		configParam<ScaleParamQuantity>(SCALE_PARAM, 0, NUM_SCALES - 1, MINOR, "Scale");
+		configParam<ChordParamQuantity>(SCALE_PARAM, 0, NUM_CHORDS - 1, MINOR, "Chord");
 		configInput(NOTE_INPUT, "1V/octave pitch");
 		configInput(CLK_INPUT, "Clock");
 		configOutput(NOTE_OUTPUT, "1V/octave pitch");
@@ -54,7 +54,7 @@ struct Arpsichord : Module {
 		getOutput(NOTE_OUTPUT).setChannels(channels);
 		for (int c = 0; c < channels; c++) {
 			float inputNote = getInput(NOTE_INPUT).getVoltage(c);
-			float outputNote = shiftNote(inputNote, scale, shiftSteps);
+			float outputNote = shiftChordNote(inputNote, scale, shiftSteps);
 			getOutput(NOTE_OUTPUT).setVoltage(outputNote, c);
 		}
 	}
