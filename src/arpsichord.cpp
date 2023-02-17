@@ -46,9 +46,9 @@ struct Arpsichord : Module {
 		if (clkTrigger.process(getInput(CLK_INPUT).getVoltage(), .1f, 2.f)) {
 			currentStep += 1;
 		}
-		currentStep %= steps;
+		currentStep %= steps * 2;
 
-		int shiftSteps = currentStep + offset;
+		int shiftSteps = (currentStep < steps ? currentStep : (steps * 2 - currentStep)) + offset;
 
 		int channels = getInput(NOTE_INPUT).getChannels();
 		getOutput(NOTE_OUTPUT).setChannels(channels);
